@@ -1,10 +1,15 @@
 const express = require('express')
+const gravatar = require('gravatar')
+const multer = require('multer');
+const jimp = require('jimp');
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const User = require('../user')
 require('dotenv').config()
 const secret = process.env.SECRET
+
+const upload = multer({ dest: 'tmp/' });
 
 const auth = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
@@ -61,7 +66,8 @@ router.post('/registration', async (req, res, next) => {
     })
   }
   try {
-    const newUser = new User({ username, email })
+    const avatarURL = gravatar.url(email, {s: 500, d: 'mm'})
+    const newUser = new User({ username, email, avatarURL })
     newUser.setPassword(password)
     await newUser.save()
     res.status(201).json({
@@ -86,5 +92,27 @@ router.get('/list', auth, (req, res, next) => {
     },
   })
 })
+
+router.patch('/avatars', upload.single('avatar'), async (req, res, next) => {
+  const { user } = req;
+  try {
+    console.log('updating avatar')
+    const avatar = await jimp.read(req.file.path);
+    await avatar.resize(500, 500);
+    const uniqueFileName = `${user.id}-${Date.now()}-${req.file.originalname}`;
+    await avatar.write(`public/avatars/${uniqueFileName}`);
+
+    // Update user's avatarURL field
+    user.avatarURL = `/avatars/${uniqueFileName}`;
+    await user.save();
+
+    res.json({
+      avatarURL: user.avatarURL,
+    });
+    console.log('avater added')
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router
