@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Home page</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="normalize.css" />
+    <link rel="stylesheet" href="skeleton.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section class="contacts">
+      <div class="container">
+        <form
+          class="form"
+          id="mail"
+          action="/"
+          method="POST"
+          enctype="application/x-www-form-urlencoded"
+          accept-charset="UTF-8"
+        >
+          <h2 class="row">Contact me</h2>
+          <div class="row">
+            <label>
+              <input
+                class="u-full-width"
+                name="name"
+                type="text"
+                placeholder="Name"
+              />
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              <input
+                class="u-full-width"
+                name="email"
+                type="email"
+                placeholder="E-mail"
+              />
+            </label>
+          </div>
+          <textarea
+            class="u-full-width"
+            placeholder="Your message"
+            name="text"
+          ></textarea>
+          <div class="row">
+            <button class="button-primary" type="submit">Send</button>
+            <button class="button-primary" type="reset">Clear</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>
